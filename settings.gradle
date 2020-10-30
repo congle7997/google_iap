@@ -1,0 +1,3 @@
+include ':google_iap'
+include ':app'
+rootProject.name = "GoogleIAP"
