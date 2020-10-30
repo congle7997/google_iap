@@ -1,2 +1,2 @@
 # GoogleIAP
- Payment is easy with Google In-app purchases
+Make payment with Google In-app purchases is easy
