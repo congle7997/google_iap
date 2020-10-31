@@ -2,10 +2,13 @@ package com.congle7997.google_iap;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -31,19 +34,38 @@ public class BillingSubs {
         this.listSkuStore = listSkuStore;
     }
 
-    public void purchase(String sku) {
+    public void init() {
         billingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases()
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
                         Log.d(TAG, "onPurchasesUpdated: " + list);
+                        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                            for (Purchase purchase : list) {
+                                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                    AcknowledgePurchaseParams acknowledgePurchaseParams =
+                                            AcknowledgePurchaseParams.newBuilder()
+                                                    .setPurchaseToken(purchase.getPurchaseToken())
+                                                    .build();
+                                    billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
+                                        @Override
+                                        public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
+                                            Log.d(TAG, "onAcknowledgePurchaseResponse: " + billingResult.getDebugMessage());
+                                        }
+                                    });
+                                }
+                            }
+                        }
                     }
                 }).build();
+    }
 
+    public void purchase(String sku) {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                Log.d(TAG, "onBillingSetupFinished: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     if (billingClient.isReady()) {
                         SkuDetailsParams skuDetailsParams = SkuDetailsParams
@@ -64,12 +86,41 @@ public class BillingSubs {
                                                 .build();
 
                                         billingClient.launchBillingFlow(activity, billingFlowParams);
-                                        Log.d(TAG, "onSkuDetailsResponse: " + billingResult.getDebugMessage());
                                     }
                                 }
                             }
                         });
                     }
+                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+                    Toast.makeText(activity, "You need login with Google account!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+
+            }
+        });
+    }
+
+    public void checkPurchase(List<String> listCheck, CallBackBilling callBackBilling) {
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    List<Purchase> listPurchase = billingClient.queryPurchases(BillingClient.SkuType.SUBS).getPurchasesList();
+                    Log.d(TAG, "onBillingSetupFinished: " + listPurchase);
+
+                    for (Purchase purchase : listPurchase) {
+                        for (String s : listCheck) {
+                            if (purchase.getSku().equals(s)) {
+                                Log.d(TAG, "onBillingSetupFinished: " + s);
+                                callBackBilling.onPurchase();
+                                return;
+                            }
+                        }
+                    }
+                    callBackBilling.onNotPurchase();
                 }
             }
 

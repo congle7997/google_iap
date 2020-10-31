@@ -2,6 +2,7 @@ package com.congle7997.google_iap;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,6 +11,8 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.PurchaseHistoryResponseListener;
@@ -27,22 +30,37 @@ public class BillingInApp {
     Activity activity;
     List<String> listSkuStore;
 
-
     public BillingInApp(Activity activity, List<String> listSkuStore) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
     }
 
-    public void purchase(String sku) {
+    public void init() {
         billingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases()
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
                         Log.d(TAG, "onPurchasesUpdated: " + list);
+                        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                            for (Purchase purchase : list) {
+                                ConsumeParams consumeParams = ConsumeParams
+                                        .newBuilder()
+                                        .setPurchaseToken(purchase.getPurchaseToken())
+                                        .build();
+                                billingClient.consumeAsync(consumeParams, new ConsumeResponseListener() {
+                                    @Override
+                                    public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
+                                        Log.d(TAG, "onConsumeResponse: " + billingResult.getDebugMessage());
+                                    }
+                                });
+                            }
+                        }
                     }
                 }).build();
+    }
 
+    public void purchase(String sku) {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
@@ -71,13 +89,42 @@ public class BillingInApp {
                             }
                         });
 
-                        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
-                            @Override
-                            public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
-                                Log.d(TAG, "onPurchaseHistoryResponse 2: " + list);
-                            }
-                        });
                     }
+                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+                    Toast.makeText(activity, "You need login with Google account!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+            }
+        });
+    }
+
+    public void checkPurchase(List<String> listCheck, CallBackBilling callBackBilling) {
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
+                        @Override
+                        public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
+                            Log.d(TAG, "onPurchaseHistoryResponse: " + list);
+
+                            for (PurchaseHistoryRecord purchaseHistoryRecord : list) {
+                                for (String s : listCheck) {
+                                    if (purchaseHistoryRecord.getSku().equals(s)) {
+                                        Log.d(TAG, "onPurchaseHistoryResponse: " + s);
+
+                                        callBackBilling.onPurchase();
+                                        return;
+                                    }
+                                }
+                            }
+
+                            callBackBilling.onNotPurchase();
+                        }
+                    });
                 }
             }
 
@@ -86,15 +133,5 @@ public class BillingInApp {
 
             }
         });
-    }
-
-    public boolean isPurchase() {
-        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
-            @Override
-            public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
-                Log.d(TAG, "onPurchaseHistoryResponse 1: " + list);
-            }
-        });
-        return false;
     }
 }
