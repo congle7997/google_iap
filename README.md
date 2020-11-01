@@ -1,4 +1,4 @@
-# Make payment with Google In-app purchases is easy
+# Library make payment with Google In-app purchases is easy
 
 # Consumables:
   &nbsp;List<String> listSkuStoreInApp = new ArrayList<>();</br>
