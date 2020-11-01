@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         btnCheckInApp = findViewById(R.id.btn_check_inapp);
         btnSubs = findViewById(R.id.btn_subs);
         btnCheckSubs = findViewById(R.id.btn_check_subs);
-a
 
         List<String> listSkuStoreInApp = new ArrayList<>();
         listSkuStoreInApp.add(skuInApp);
