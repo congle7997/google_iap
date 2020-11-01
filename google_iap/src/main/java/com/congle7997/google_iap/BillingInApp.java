@@ -33,27 +33,30 @@ public class BillingInApp {
     public BillingInApp(Activity activity, List<String> listSkuStore) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
-    }
 
-    public void init() {
         billingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases()
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
                         Log.d(TAG, "onPurchasesUpdated: " + list);
+                        // confirm purchased, otherwise refund money
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                             for (Purchase purchase : list) {
-                                ConsumeParams consumeParams = ConsumeParams
-                                        .newBuilder()
-                                        .setPurchaseToken(purchase.getPurchaseToken())
-                                        .build();
-                                billingClient.consumeAsync(consumeParams, new ConsumeResponseListener() {
-                                    @Override
-                                    public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
-                                        Log.d(TAG, "onConsumeResponse: " + billingResult.getDebugMessage());
-                                    }
-                                });
+                                // for consumables (buy multi times)
+                                Log.d(TAG, "onPurchasesUpdated state: " + billingResult.getResponseCode());
+                                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                    ConsumeParams consumeParams = ConsumeParams
+                                            .newBuilder()
+                                            .setPurchaseToken(purchase.getPurchaseToken())
+                                            .build();
+                                    billingClient.consumeAsync(consumeParams, new ConsumeResponseListener() {
+                                        @Override
+                                        public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
+                                            Log.d(TAG, "onConsumeResponse: " + billingResult.getDebugMessage());
+                                        }
+                                    });
+                                }
                             }
                         }
                     }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,20 +10,44 @@
         android:id="@+id/btn_inapp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="268dp"
         android:text="INAPP"
-        android:layout_marginLeft="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></Button>
+
+    <Button
+        android:id="@+id/btn_check_inapp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="268dp"
+        android:text="check InApp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.376"
+        app:layout_constraintStart_toEndOf="@+id/btn_inapp"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_subs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
         android:text="Subs"
-        android:layout_marginRight="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_inapp"
+        app:layout_constraintVertical_bias="0.253"></Button>
+
+    <Button
+        android:id="@+id/btn_check_subs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check Subs"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></Button>
+        app:layout_constraintHorizontal_bias="0.353"
+        app:layout_constraintStart_toEndOf="@+id/btn_subs"
+        app:layout_constraintTop_toBottomOf="@+id/btn_check_inapp"
+        app:layout_constraintVertical_bias="0.253" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

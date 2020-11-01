@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.congle7997.google_iap"
+        applicationId "com.minhhoang.vpnff.vpn"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

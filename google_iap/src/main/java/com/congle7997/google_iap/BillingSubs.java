@@ -32,17 +32,18 @@ public class BillingSubs {
     public BillingSubs(Activity activity, List<String> listSkuStore) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
-    }
 
-    public void init() {
         billingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases()
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
                         Log.d(TAG, "onPurchasesUpdated: " + list);
+                        // confirm purchased, otherwise refund money
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                             for (Purchase purchase : list) {
+                                // for non-consumables (buy one time)
+                                Log.d(TAG, "onPurchasesUpdated state: " +billingResult.getResponseCode());
                                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                                     AcknowledgePurchaseParams acknowledgePurchaseParams =
                                             AcknowledgePurchaseParams.newBuilder()
@@ -65,7 +66,6 @@ public class BillingSubs {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                Log.d(TAG, "onBillingSetupFinished: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     if (billingClient.isReady()) {
                         SkuDetailsParams skuDetailsParams = SkuDetailsParams
