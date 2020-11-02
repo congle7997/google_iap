@@ -1,5 +1,5 @@
 # Consumables:
-    List<String> listSkuStoreInApp = new ArrayList<>();</br>
+    List<String> listSkuStoreInApp = new ArrayList<>();
     listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");</br>
     BillingInApp billingInApp = new BillingInApp(YOUR_ACTIVITY, listSkuStoreInApp);</br>
   // purchase:</br>
