@@ -1,5 +1,5 @@
 # Consumables:
-  // init:
+  // initialize:
   
     List<String> listSkuStoreInApp = new ArrayList<>();
     listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");
@@ -23,7 +23,7 @@
      });
   
 # Not-consumables:
-  // init:
+  // initialize:
   
     List<String> listSkuStoreSubs = new ArrayList<>();
     listSkuStoreSubs.add("YOUR_KEY_SUBS_FROM_STORE");
