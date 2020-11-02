@@ -1,5 +1,6 @@
 # Consumables:
   // initialize:
+  https://jitpack.io/#NguyenLamMS/mh-billing
   
     List<String> listSkuStoreInApp = new ArrayList<>();
     listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");
