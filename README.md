@@ -1,6 +1,8 @@
+[![Release](https://jitpack.io/v/User/Repo.svg)]
+(https://jitpack.io/#congle7997/GoogleIAP/1.0.0)
+
 # Consumables:
   // initialize:
-  https://jitpack.io/#NguyenLamMS/mh-billing
   
     List<String> listSkuStoreInApp = new ArrayList<>();
     listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");
