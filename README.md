@@ -18,18 +18,20 @@
       public void onNotPurchase() {</br>
          Log.d(TAG, "onNotPurchase: ");</br>
       }</br>
-   });</br>
+     });</br>
   
 # Not-consumables:
-  List<String> listSkuStoreSubs = new ArrayList<>();</br>
-  listSkuStoreSubs.add("YOUR_KEY_SUBS_FROM_STORE");</br>
-  BillingSubs billingSubs = new BillingSubs(YOUR_ACTIVITY, listSkuStoreSubs); </br>
+    List<String> listSkuStoreSubs = new ArrayList<>();</br>
+    listSkuStoreSubs.add("YOUR_KEY_SUBS_FROM_STORE");</br>
+    BillingSubs billingSubs = new BillingSubs(YOUR_ACTIVITY, listSkuStoreSubs); </br>
   // purchase:</br>
-  billingSubs.purchase("KEY_SUBS_NEED_PURCHASE");</br>
+  
+    billingSubs.purchase("KEY_SUBS_NEED_PURCHASE");</br>
   // check purchase:</br>
-  List<String> listCheckSubs = new ArrayList<>();</br>
-  listCheckSubs.add("KEY_SUBS_NEED_CHECK");</br>
-  billingSubs.checkPurchase(listCheckSubs, new CallBackBilling() {</br>
+  
+    List<String> listCheckSubs = new ArrayList<>();</br>
+    listCheckSubs.add("KEY_SUBS_NEED_CHECK");</br>
+    billingSubs.checkPurchase(listCheckSubs, new CallBackBilling() {</br>
       @Override</br>
       public void onPurchase() {</br>
          Log.d(TAG, "onPurchase: ");</br>
@@ -38,4 +40,4 @@
       public void onNotPurchase() {</br>
          Log.d(TAG, "onNotPurchase: ");</br>
       }</br>
-   });</br>
+     });</br>
