@@ -1,4 +1,6 @@
 # Consumables:
+  // init:
+  
     List<String> listSkuStoreInApp = new ArrayList<>();
     listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");
     BillingInApp billingInApp = new BillingInApp(YOUR_ACTIVITY, listSkuStoreInApp);
@@ -21,6 +23,8 @@
      });
   
 # Not-consumables:
+  // init:
+  
     List<String> listSkuStoreSubs = new ArrayList<>();
     listSkuStoreSubs.add("YOUR_KEY_SUBS_FROM_STORE");
     BillingSubs billingSubs = new BillingSubs(YOUR_ACTIVITY, listSkuStoreSubs);
