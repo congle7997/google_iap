@@ -12,7 +12,7 @@
   // Step 2: Add the dependency
   
     dependencies {
-      implementation 'com.github.prolificinteractive:material-calendarview:${version}'
+      implementation 'com.github.congle7997:GoogleIAP:1.0.0'
     }
 
 # Consumables:
