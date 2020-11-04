@@ -1,5 +1,20 @@
 [![](https://jitpack.io/v/congle7997/GoogleIAP.svg)](https://jitpack.io/#congle7997/GoogleIAP)
 
+# Installation:
+  // Step 1: Add the JitPack repository to your build file
+  
+    allprojects {
+    repositories {
+      ...
+      maven { url 'https://jitpack.io' }
+      }
+    }
+  // Step 2: Add the dependency
+  
+    dependencies {
+      implementation 'com.github.prolificinteractive:material-calendarview:${version}'
+    }
+
 # Consumables:
   // initialize:
   
@@ -32,7 +47,7 @@
     BillingSubs billingSubs = new BillingSubs(YOUR_ACTIVITY, listSkuStoreSubs);
   // purchase:
   
-    billingSubs.purchase("KEY_SUBS_NEED_PURCHASE");</br>
+    billingSubs.purchase("KEY_SUBS_NEED_PURCHASE");
   // check purchase:
   
     List<String> listCheckSubs = new ArrayList<>();
