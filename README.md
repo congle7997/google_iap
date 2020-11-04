@@ -1,7 +1,7 @@
 [![](https://jitpack.io/v/congle7997/GoogleIAP.svg)](https://jitpack.io/#congle7997/GoogleIAP)
 
 # Installation:
-  // add the JitPack repository to your build file
+  // add the JitPack repository to your build file:
   
     allprojects {
     repositories {
@@ -9,7 +9,7 @@
       maven { url 'https://jitpack.io' }
       }
     }
-  // add the dependency
+  // add the dependency:
   
     dependencies {
       implementation 'com.github.congle7997:GoogleIAP:1.0.0'
