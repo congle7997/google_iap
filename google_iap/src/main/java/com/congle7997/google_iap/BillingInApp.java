@@ -30,6 +30,19 @@ public class BillingInApp {
     Activity activity;
     List<String> listSkuStore;
 
+    public BillingInApp(Activity activity, List<String> listSkuStore) {
+        this.activity = activity;
+        this.listSkuStore = listSkuStore;
+
+        billingClient = BillingClient.newBuilder(activity)
+                .enablePendingPurchases()
+                .setListener(new PurchasesUpdatedListener() {
+                    @Override
+                    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
+                    }
+                }).build();
+    }
+
     public BillingInApp(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
@@ -39,12 +52,11 @@ public class BillingInApp {
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-                        Log.d(TAG, "onPurchasesUpdated: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
                         // confirm purchased, otherwise refund money
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                            Log.d(TAG, "onPurchasesUpdated: " + list);
                             for (Purchase purchase : list) {
                                 // for consumables (buy multi times)
-                                Log.d(TAG, "onPurchasesUpdated state: " + billingResult.getResponseCode());
                                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                                     ConsumeParams consumeParams = ConsumeParams
                                             .newBuilder()
@@ -62,8 +74,6 @@ public class BillingInApp {
                                 }
                             }
                         }
-
-                        callBackBilling.onNotPurchase();
                     }
                 }).build();
     }
@@ -122,7 +132,7 @@ public class BillingInApp {
                             for (PurchaseHistoryRecord purchaseHistoryRecord : list) {
                                 for (String s : listCheck) {
                                     if (purchaseHistoryRecord.getSku().equals(s)) {
-                                        Log.d(TAG, "onPurchaseHistoryResponse: " + s);
+                                        Log.d(TAG, "purchased: " + s);
 
                                         callBackBilling.onPurchase();
                                         return;

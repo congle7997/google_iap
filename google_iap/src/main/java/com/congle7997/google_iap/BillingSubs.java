@@ -28,6 +28,18 @@ public class BillingSubs {
     Activity activity;
     List<String> listSkuStore;
 
+    public BillingSubs(Activity activity, List<String> listSkuStore) {
+        this.activity = activity;
+        this.listSkuStore = listSkuStore;
+
+        billingClient = BillingClient.newBuilder(activity)
+                .enablePendingPurchases()
+                .setListener(new PurchasesUpdatedListener() {
+                    @Override
+                    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
+                    }
+                }).build();
+    }
 
     public BillingSubs(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
         this.activity = activity;
@@ -38,12 +50,11 @@ public class BillingSubs {
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-                        Log.d(TAG, "onPurchasesUpdated: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
                         // confirm purchased, otherwise refund money
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                            Log.d(TAG, "onPurchasesUpdated: " + list);
                             for (Purchase purchase : list) {
                                 // for non-consumables (buy one time)
-                                Log.d(TAG, "onPurchasesUpdated state: " +billingResult.getResponseCode());
                                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                                     AcknowledgePurchaseParams acknowledgePurchaseParams =
                                             AcknowledgePurchaseParams.newBuilder()
@@ -61,8 +72,6 @@ public class BillingSubs {
                                 }
                             }
                         }
-
-                        callBackBilling.onNotPurchase();
                     }
                 }).build();
     }
@@ -114,12 +123,14 @@ public class BillingSubs {
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     List<Purchase> listPurchase = billingClient.queryPurchases(BillingClient.SkuType.SUBS).getPurchasesList();
-                    Log.d(TAG, "onBillingSetupFinished: " + listPurchase);
+                    for (Purchase purchase : listPurchase) {
+                        Log.d(TAG, "onBillingSetupFinished: " + purchase);
+                    }
 
                     for (Purchase purchase : listPurchase) {
                         for (String s : listCheck) {
                             if (purchase.getSku().equals(s)) {
-                                Log.d(TAG, "onBillingSetupFinished: " + s);
+                                Log.d(TAG, "purchased: " + s);
                                 callBackBilling.onPurchase();
                                 return;
                             }

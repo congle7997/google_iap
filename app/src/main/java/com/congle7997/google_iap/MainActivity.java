@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnInApp, btnCheckInApp, btnSubs, btnCheckSubs;
     String skuInApp = "test_inapp_3";
-    String skuSubs = "test_sub_2";
+    String skuSubs = "test_ads_1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,36 +29,26 @@ public class MainActivity extends AppCompatActivity {
 
         List<String> listSkuStoreInApp = new ArrayList<>();
         listSkuStoreInApp.add(skuInApp);
-        BillingInApp billingInApp = new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackBilling() {
-            @Override
-            public void onPurchase() {
-                Log.d(TAG, "onPurchase: ");
-            }
-
-            @Override
-            public void onNotPurchase() {
-                Log.d(TAG, "onNotPurchase: ");
-            }
-        });
 
         List<String> listSkuStoreSubs = new ArrayList<>();
         listSkuStoreSubs.add(skuSubs);
-        BillingSubs billingSubs = new BillingSubs(MainActivity.this, listSkuStoreSubs, new CallBackBilling() {
-            @Override
-            public void onPurchase() {
-                Log.d(TAG, "onPurchase: ");
-            }
-
-            @Override
-            public void onNotPurchase() {
-                Log.d(TAG, "onNotPurchase: ");
-            }
-        });
         
         btnInApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                billingInApp.purchase(skuInApp);
+                BillingInApp billingInApp1 = new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackBilling() {
+                    @Override
+                    public void onPurchase() {
+                        Log.d(TAG, "onPurchase: ");
+                    }
+
+                    @Override
+                    public void onNotPurchase() {
+                        Log.d(TAG, "onNotPurchase: ");
+                    }
+                });
+
+                billingInApp1.purchase(skuInApp);
             }
         });
 
@@ -67,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 List<String> listCheckInApp = new ArrayList<>();
                 listCheckInApp.add(skuInApp);
-                billingInApp.checkPurchase(listCheckInApp, new CallBackBilling() {
+                BillingInApp billingInApp2 = new BillingInApp(MainActivity.this, listSkuStoreInApp);
+                billingInApp2.checkPurchase(listCheckInApp, new CallBackBilling() {
                     @Override
                     public void onPurchase() {
                         Log.d(TAG, "onPurchase: ");
@@ -81,10 +72,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         btnSubs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                billingSubs.purchase(skuSubs);
+                BillingSubs billingSubs1 = new BillingSubs(MainActivity.this, listSkuStoreSubs, new CallBackBilling() {
+                    @Override
+                    public void onPurchase() {
+                        Log.d(TAG, "onPurchase: ");
+                    }
+
+                    @Override
+                    public void onNotPurchase() {
+                        Log.d(TAG, "onNotPurchase: ");
+                    }
+                });
+
+                billingSubs1.purchase(skuSubs);
             }
         });
 
@@ -93,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 List<String> listCheckSubs = new ArrayList<>();
                 listCheckSubs.add(skuSubs);
-                billingSubs.checkPurchase(listCheckSubs, new CallBackBilling() {
+                BillingSubs billingSubs2 = new BillingSubs(MainActivity.this, listSkuStoreSubs);
+                billingSubs2.checkPurchase(listCheckSubs, new CallBackBilling() {
                     @Override
                     public void onPurchase() {
                         Log.d(TAG, "onPurchase: ");
