@@ -1,39 +1,64 @@
+[![](https://jitpack.io/v/congle7997/GoogleIAP.svg)](https://jitpack.io/#congle7997/GoogleIAP)
+
+# Installation:
+  // add the JitPack repository to your build file:
+  
+    allprojects {
+    repositories {
+      ...
+      maven { url 'https://jitpack.io' }
+      }
+    }
+  // add the dependency:
+  
+    dependencies {
+      implementation 'com.github.congle7997:GoogleIAP:1.0.0'
+    }
+
 # Consumables:
-  &nbsp;List<String> listSkuStoreInApp = new ArrayList<>();</br>
-  listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");</br>
-  BillingInApp billingInApp = new BillingInApp(YOUR_ACTIVITY, listSkuStoreInApp); </br>
-  // purchase:</br>
-  billingInApp.purchase("KEY_INAPP_NEED_PURCHASE");</br>
-  // check purchase:</br>
-  List<String> listCheckInApp = new ArrayList<>();</br>
-  listCheckInApp.add("KEY_INAPP_NEED_CHECK");</br>
-  billingInApp.checkPurchase(listCheckInApp, new CallBackBilling() {</br>
-      @Override</br>
-      public void onPurchase() {</br>
-         Log.d(TAG, "onPurchase: ");</br>
-      }</br>
-      @Override</br>
-      public void onNotPurchase() {</br>
-         Log.d(TAG, "onNotPurchase: ");</br>
-      }</br>
-   });</br>
+  // initialize:
+  
+    List<String> listSkuStoreInApp = new ArrayList<>();
+    listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");
+    BillingInApp billingInApp = new BillingInApp(YOUR_ACTIVITY, listSkuStoreInApp);
+  // purchase:
+  
+    billingInApp.purchase("KEY_INAPP_NEED_PURCHASE");
+  // check purchase:
+  
+    List<String> listCheckInApp = new ArrayList<>();
+    listCheckInApp.add("KEY_INAPP_NEED_CHECK");
+    billingInApp.checkPurchase(listCheckInApp, new CallBackBilling() {
+      @Override
+      public void onPurchase() {
+         Log.d(TAG, "onPurchase: ");
+      }
+      @Override
+      public void onNotPurchase() {
+         Log.d(TAG, "onNotPurchase: ");
+      }
+     });
   
 # Not-consumables:
-  List<String> listSkuStoreSubs = new ArrayList<>();</br>
-  listSkuStoreSubs.add("YOUR_KEY_SUBS_FROM_STORE");</br>
-  BillingSubs billingSubs = new BillingSubs(YOUR_ACTIVITY, listSkuStoreSubs); </br>
-  // purchase:</br>
-  billingSubs.purchase("KEY_SUBS_NEED_PURCHASE");</br>
-  // check purchase:</br>
-  List<String> listCheckSubs = new ArrayList<>();</br>
-  listCheckSubs.add("KEY_SUBS_NEED_CHECK");</br>
-  billingSubs.checkPurchase(listCheckSubs, new CallBackBilling() {</br>
-      @Override</br>
-      public void onPurchase() {</br>
-         Log.d(TAG, "onPurchase: ");</br>
-      }</br>
-      @Override</br>
-      public void onNotPurchase() {</br>
-         Log.d(TAG, "onNotPurchase: ");</br>
-      }</br>
-   });</br>
+  // initialize:
+  
+    List<String> listSkuStoreSubs = new ArrayList<>();
+    listSkuStoreSubs.add("YOUR_KEY_SUBS_FROM_STORE");
+    BillingSubs billingSubs = new BillingSubs(YOUR_ACTIVITY, listSkuStoreSubs);
+  // purchase:
+  
+    billingSubs.purchase("KEY_SUBS_NEED_PURCHASE");
+  // check purchase:
+  
+    List<String> listCheckSubs = new ArrayList<>();
+    listCheckSubs.add("KEY_SUBS_NEED_CHECK");
+    billingSubs.checkPurchase(listCheckSubs, new CallBackBilling() {
+      @Override
+      public void onPurchase() {
+         Log.d(TAG, "onPurchase: ");
+      }
+      @Override
+      public void onNotPurchase() {
+         Log.d(TAG, "onNotPurchase: ");
+      }
+     });
