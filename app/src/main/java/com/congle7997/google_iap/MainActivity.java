@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "my_MainActivity";
 
     Button btnInApp, btnCheckInApp, btnSubs, btnCheckSubs;
-    String skuInApp = "test_in_app_2";
+    String skuInApp = "test_inapp_3";
     String skuSubs = "test_sub_2";
 
     @Override
@@ -29,11 +29,31 @@ public class MainActivity extends AppCompatActivity {
 
         List<String> listSkuStoreInApp = new ArrayList<>();
         listSkuStoreInApp.add(skuInApp);
-        BillingInApp billingInApp = new BillingInApp(MainActivity.this, listSkuStoreInApp);
+        BillingInApp billingInApp = new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackBilling() {
+            @Override
+            public void onPurchase() {
+                Log.d(TAG, "onPurchase: ");
+            }
+
+            @Override
+            public void onNotPurchase() {
+                Log.d(TAG, "onNotPurchase: ");
+            }
+        });
 
         List<String> listSkuStoreSubs = new ArrayList<>();
         listSkuStoreSubs.add(skuSubs);
-        BillingSubs billingSubs = new BillingSubs(MainActivity.this, listSkuStoreSubs);
+        BillingSubs billingSubs = new BillingSubs(MainActivity.this, listSkuStoreSubs, new CallBackBilling() {
+            @Override
+            public void onPurchase() {
+                Log.d(TAG, "onPurchase: ");
+            }
+
+            @Override
+            public void onNotPurchase() {
+                Log.d(TAG, "onNotPurchase: ");
+            }
+        });
         
         btnInApp.setOnClickListener(new View.OnClickListener() {
             @Override

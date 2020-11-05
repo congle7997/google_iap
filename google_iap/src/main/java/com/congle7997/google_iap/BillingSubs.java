@@ -29,7 +29,7 @@ public class BillingSubs {
     List<String> listSkuStore;
 
 
-    public BillingSubs(Activity activity, List<String> listSkuStore) {
+    public BillingSubs(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
 
@@ -38,7 +38,7 @@ public class BillingSubs {
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-                        Log.d(TAG, "onPurchasesUpdated: " + list);
+                        Log.d(TAG, "onPurchasesUpdated: " + billingResult.getResponseCode() + " - " + billingResult.getDebugMessage());
                         // confirm purchased, otherwise refund money
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                             for (Purchase purchase : list) {
@@ -55,9 +55,14 @@ public class BillingSubs {
                                             Log.d(TAG, "onAcknowledgePurchaseResponse: " + billingResult.getDebugMessage());
                                         }
                                     });
+
+                                    callBackBilling.onPurchase();
+                                    return;
                                 }
                             }
                         }
+
+                        callBackBilling.onNotPurchase();
                     }
                 }).build();
     }
