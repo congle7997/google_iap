@@ -12,7 +12,7 @@
   // add the dependency:
   
     dependencies {
-      implementation 'com.github.congle7997:GoogleIAP:1.0.0'
+      implementation 'com.github.congle7997:GoogleIAP:Tag'
     }
 
 # Consumables:
