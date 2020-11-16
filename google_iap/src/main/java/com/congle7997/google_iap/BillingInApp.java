@@ -129,13 +129,15 @@ public class BillingInApp {
                         public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
                             Log.d(TAG, "onPurchaseHistoryResponse: " + list);
 
-                            for (PurchaseHistoryRecord purchaseHistoryRecord : list) {
-                                for (String s : listCheck) {
-                                    if (purchaseHistoryRecord.getSku().equals(s)) {
-                                        Log.d(TAG, "purchased: " + s);
+                            if (list != null) {
+                                for (PurchaseHistoryRecord purchaseHistoryRecord : list) {
+                                    for (String s : listCheck) {
+                                        if (purchaseHistoryRecord.getSku().equals(s)) {
+                                            Log.d(TAG, "purchased: " + s);
 
-                                        callBackBilling.onPurchase();
-                                        return;
+                                            callBackBilling.onPurchase();
+                                            return;
+                                        }
                                     }
                                 }
                             }

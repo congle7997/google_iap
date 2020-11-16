@@ -123,9 +123,7 @@ public class BillingSubs {
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     List<Purchase> listPurchase = billingClient.queryPurchases(BillingClient.SkuType.SUBS).getPurchasesList();
-                    for (Purchase purchase : listPurchase) {
-                        Log.d(TAG, "onBillingSetupFinished: " + purchase);
-                    }
+                    Log.d(TAG, "onBillingSetupFinished: " + listPurchase);
 
                     for (Purchase purchase : listPurchase) {
                         for (String s : listCheck) {
