@@ -135,6 +135,8 @@ public class BillingSubs {
                         }
                     }
                     callBackBilling.onNotPurchase();
+                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+                    callBackBilling.onNotLogged();
                 }
             }
 

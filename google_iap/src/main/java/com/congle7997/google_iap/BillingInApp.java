@@ -34,6 +34,7 @@ public class BillingInApp {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
 
+
         billingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases()
                 .setListener(new PurchasesUpdatedListener() {
@@ -123,7 +124,7 @@ public class BillingInApp {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
                         @Override
                         public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
@@ -145,6 +146,8 @@ public class BillingInApp {
                             callBackBilling.onNotPurchase();
                         }
                     });
+                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+                    callBackBilling.onNotLogged();
                 }
             }
 
