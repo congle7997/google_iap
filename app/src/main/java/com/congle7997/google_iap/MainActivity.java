@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "my_MainActivity";
 
     Button btnInApp, btnCheckInApp, btnSubs, btnCheckSubs;
-    String skuInApp = "test_inapp_4";
+    String skuInApp = "test_inapp_5";
     String skuSubs = "test_ads_1";
 
     @Override
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNotLogged() {
+                    public void onNotLogin() {
                         Log.d(TAG, "onNotLogged: ");
                     }
                 });
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNotLogged() {
+                    public void onNotLogin() {
                         Log.d(TAG, "onNotLogged: ");
                     }
                 });
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNotLogged() {
+                    public void onNotLogin() {
                         Log.d(TAG, "onNotLogged: ");
                     }
                 });
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNotLogged() {
+                    public void onNotLogin() {
                         Log.d(TAG, "onNotLogged: ");
                     }
                 });

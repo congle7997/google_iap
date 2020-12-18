@@ -2,7 +2,6 @@ package com.congle7997.google_iap;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +28,7 @@ public class BillingInApp {
     BillingClient billingClient;
     Activity activity;
     List<String> listSkuStore;
+    CallBackBilling callBackBilling;
 
     public BillingInApp(Activity activity, List<String> listSkuStore) {
         this.activity = activity;
@@ -47,6 +47,8 @@ public class BillingInApp {
     public BillingInApp(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
+        this.callBackBilling = callBackBilling;
+
 
         billingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases()
@@ -74,6 +76,8 @@ public class BillingInApp {
                                     return;
                                 }
                             }
+                        } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+                            callBackBilling.onNotPurchase();
                         }
                     }
                 }).build();
@@ -110,7 +114,7 @@ public class BillingInApp {
 
                     }
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                    Toast.makeText(activity, "You need login with Google account!", Toast.LENGTH_LONG).show();
+                    callBackBilling.onNotLogin();
                 }
             }
 
@@ -147,7 +151,7 @@ public class BillingInApp {
                         }
                     });
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                    callBackBilling.onNotLogged();
+                    callBackBilling.onNotLogin();
                 }
             }
 

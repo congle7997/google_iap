@@ -2,7 +2,6 @@ package com.congle7997.google_iap;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +26,7 @@ public class BillingSubs {
     BillingClient billingClient;
     Activity activity;
     List<String> listSkuStore;
+    CallBackBilling callBackBilling;
 
     public BillingSubs(Activity activity, List<String> listSkuStore) {
         this.activity = activity;
@@ -44,12 +44,14 @@ public class BillingSubs {
     public BillingSubs(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
+        this.callBackBilling = callBackBilling;
 
         billingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases()
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
+                        Log.d(TAG, "onPurchasesUpdated: " + billingResult.getResponseCode());
                         // confirm purchased, otherwise refund money
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                             Log.d(TAG, "onPurchasesUpdated: " + list);
@@ -71,6 +73,8 @@ public class BillingSubs {
                                     return;
                                 }
                             }
+                        } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+                            callBackBilling.onNotPurchase();
                         }
                     }
                 }).build();
@@ -106,7 +110,7 @@ public class BillingSubs {
                         });
                     }
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                    Toast.makeText(activity, "You need login with Google account!", Toast.LENGTH_LONG).show();
+                    callBackBilling.onNotLogin();
                 }
             }
 
@@ -135,8 +139,9 @@ public class BillingSubs {
                         }
                     }
                     callBackBilling.onNotPurchase();
+                    return;
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                    callBackBilling.onNotLogged();
+                    callBackBilling.onNotLogin();
                 }
             }
 
