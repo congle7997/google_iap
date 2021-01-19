@@ -20,7 +20,22 @@
   
     List<String> listSkuStoreInApp = new ArrayList<>();
     listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");
-    BillingInApp billingInApp = new BillingInApp(YOUR_ACTIVITY, listSkuStoreInApp);
+    BillingInApp billingInApp = new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackBilling() {
+       @Override
+       public void onPurchase() {
+           Log.d(TAG, "onPurchase: ");
+       }
+
+       @Override
+       public void onNotPurchase() {
+            Log.d(TAG, "onNotPurchase: ");
+       }
+
+       @Override
+       public void onNotLogin() {
+           Log.d(TAG, "onNotLogged: ");
+       }
+    });
   // purchase:
   
     billingInApp.purchase("KEY_INAPP_NEED_PURCHASE");
@@ -44,21 +59,42 @@
   
     List<String> listSkuStoreSubs = new ArrayList<>();
     listSkuStoreSubs.add("YOUR_KEY_SUBS_FROM_STORE");
-    BillingSubs billingSubs = new BillingSubs(YOUR_ACTIVITY, listSkuStoreSubs);
+    BillingSubs billingSubs = new BillingSubs(this, listSkuFromStore, new CallBackBilling() {
+        @Override
+        public void onPurchase() {
+          Log.d(TAG, "onPurchase: ");
+        }
+
+        @Override
+        public void onNotPurchase() {
+          Log.d(TAG, "onNotPurchase: ");
+        }
+
+        @Override
+        public void onNotLogin() {
+          Log.d(TAG, "onNotLogin: ");
+        }
+     });
+        
   // purchase:
   
     billingSubs.purchase("KEY_SUBS_NEED_PURCHASE");
+  
   // check purchase:
   
-    List<String> listCheckSubs = new ArrayList<>();
-    listCheckSubs.add("KEY_SUBS_NEED_CHECK");
-    billingSubs.checkPurchase(listCheckSubs, new CallBackBilling() {
-      @Override
-      public void onPurchase() {
-         Log.d(TAG, "onPurchase: ");
-      }
-      @Override
-      public void onNotPurchase() {
-         Log.d(TAG, "onNotPurchase: ");
-      }
+    billingSubs.checkPurchase(listSkuFromStore, new CallBackBilling() {
+         @Override
+         public void onPurchase() {
+             Log.d(TAG, "onPurchase: ");
+         }
+
+         @Override
+         public void onNotPurchase() {
+              Log.d(TAG, "onNotPurchase: ");;
+         }
+
+         @Override
+         public void onNotLogin() {
+            Log.d(TAG, "onNotPurchase: ");
+        }
      });
