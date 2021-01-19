@@ -16,7 +16,7 @@
     }
 
 # Consumables:
-  // initialize:
+  // purchase:
   
     List<String> listSkuStoreInApp = new ArrayList<>();
     listSkuStoreInApp.add("YOUR_KEY_INAPP_FROM_STORE");
@@ -36,30 +36,36 @@
            Log.d(TAG, "onNotLogged: ");
        }
     });
-  // purchase:
-  
     billingInApp.purchase("KEY_INAPP_NEED_PURCHASE");
+    
   // check purchase:
   
     List<String> listCheckInApp = new ArrayList<>();
-    listCheckInApp.add("KEY_INAPP_NEED_CHECK");
+    listCheckInApp.add("KEY_NEED_CHECK");
+    BillingInApp billingInApp = new BillingInApp(MainActivity.this, listCheckInApp);
     billingInApp.checkPurchase(listCheckInApp, new CallBackBilling() {
-      @Override
-      public void onPurchase() {
-         Log.d(TAG, "onPurchase: ");
-      }
-      @Override
-      public void onNotPurchase() {
-         Log.d(TAG, "onNotPurchase: ");
-      }
-     });
+       @Override
+       public void onPurchase() {
+           Log.d(TAG, "onPurchase: ");
+       }
+
+       @Override
+       public void onNotPurchase() {
+           Log.d(TAG, "onNotPurchase: ");
+       }
+
+       @Override
+       public void onNotLogin() {
+           Log.d(TAG, "onNotLogged: ");
+       }
+    });
   
 # Not-consumables:
-  // initialize:
+  // purchase:
   
     List<String> listSkuStoreSubs = new ArrayList<>();
     listSkuStoreSubs.add("YOUR_KEY_SUBS_FROM_STORE");
-    BillingSubs billingSubs = new BillingSubs(this, listSkuFromStore, new CallBackBilling() {
+    BillingSubs billingSubs = new BillingSubs(this, listSkuStoreSubs, new CallBackBilling() {
         @Override
         public void onPurchase() {
           Log.d(TAG, "onPurchase: ");
@@ -75,14 +81,14 @@
           Log.d(TAG, "onNotLogin: ");
         }
      });
-        
-  // purchase:
-  
     billingSubs.purchase("KEY_SUBS_NEED_PURCHASE");
-  
+ 
   // check purchase:
   
-    billingSubs.checkPurchase(listSkuFromStore, new CallBackBilling() {
+    List<String> listCheckSubs = new ArrayList<>();
+    listCheckSubs.add("KEY_NEED_CHECK");
+    BillingSubs billingSubs = new BillingSubs(this, listCheckSubs);
+    billingSubs.checkPurchase(listCheckSubs, new CallBackBilling() {
          @Override
          public void onPurchase() {
              Log.d(TAG, "onPurchase: ");
