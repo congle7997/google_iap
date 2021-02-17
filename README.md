@@ -104,3 +104,5 @@
             Log.d(TAG, "onNotPurchase: ");
         }
      });
+     
+If you need support, contact me: congle7997@gmail.com     
