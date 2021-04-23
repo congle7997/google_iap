@@ -58,22 +58,24 @@ public class BillingInApp {
                         // confirm purchased, otherwise refund money
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                             Log.d(TAG, "onPurchasesUpdated: " + list);
-                            for (Purchase purchase : list) {
-                                // for consumables (buy multi times)
-                                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                                    ConsumeParams consumeParams = ConsumeParams
-                                            .newBuilder()
-                                            .setPurchaseToken(purchase.getPurchaseToken())
-                                            .build();
-                                    billingClient.consumeAsync(consumeParams, new ConsumeResponseListener() {
-                                        @Override
-                                        public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
-                                            Log.d(TAG, "onConsumeResponse: " + billingResult.getDebugMessage());
-                                        }
-                                    });
+                            if (list != null) {
+                                for (Purchase purchase : list) {
+                                    // for consumables (buy multi times)
+                                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                        ConsumeParams consumeParams = ConsumeParams
+                                          .newBuilder()
+                                          .setPurchaseToken(purchase.getPurchaseToken())
+                                          .build();
+                                        billingClient.consumeAsync(consumeParams, new ConsumeResponseListener() {
+                                            @Override
+                                            public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
+                                                Log.d(TAG, "onConsumeResponse: " + billingResult.getDebugMessage());
+                                            }
+                                        });
 
-                                    callBackBilling.onPurchase();
-                                    return;
+                                        callBackBilling.onPurchase();
+                                        return;
+                                    }
                                 }
                             }
                         } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
@@ -98,15 +100,17 @@ public class BillingInApp {
                         billingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {
                             @Override
                             public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
-                                for (final SkuDetails skuDetails : list) {
-                                    Log.d(TAG, "onSkuDetailsResponse: " + list);
-                                    if (skuDetails.getSku().equals(sku)) {
-                                        BillingFlowParams billingFlowParams = BillingFlowParams
-                                                .newBuilder()
-                                                .setSkuDetails(skuDetails)
-                                                .build();
+                                if (list != null) {
+                                    for (final SkuDetails skuDetails : list) {
+                                        Log.d(TAG, "onSkuDetailsResponse: " + list);
+                                        if (skuDetails.getSku().equals(sku)) {
+                                            BillingFlowParams billingFlowParams = BillingFlowParams
+                                              .newBuilder()
+                                              .setSkuDetails(skuDetails)
+                                              .build();
 
-                                        billingClient.launchBillingFlow(activity, billingFlowParams);
+                                            billingClient.launchBillingFlow(activity, billingFlowParams);
+                                        }
                                     }
                                 }
                             }
