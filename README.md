@@ -96,7 +96,7 @@
 
          @Override
          public void onNotPurchase() {
-              Log.d(TAG, "onNotPurchase: ");;
+              Log.d(TAG, "onNotPurchase: ");
          }
 
          @Override
