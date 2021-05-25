@@ -55,22 +55,24 @@ public class BillingSubs {
                         // confirm purchased, otherwise refund money
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                             Log.d(TAG, "onPurchasesUpdated: " + list);
-                            for (Purchase purchase : list) {
-                                // for non-consumables (buy one time)
-                                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                                    AcknowledgePurchaseParams acknowledgePurchaseParams =
-                                            AcknowledgePurchaseParams.newBuilder()
-                                                    .setPurchaseToken(purchase.getPurchaseToken())
-                                                    .build();
-                                    billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
-                                        @Override
-                                        public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                                            Log.d(TAG, "onAcknowledgePurchaseResponse: " + billingResult.getDebugMessage());
-                                        }
-                                    });
+                            if (list != null) {
+                                for (Purchase purchase : list) {
+                                    // for non-consumables (buy one time)
+                                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                        AcknowledgePurchaseParams acknowledgePurchaseParams =
+                                                AcknowledgePurchaseParams.newBuilder()
+                                                        .setPurchaseToken(purchase.getPurchaseToken())
+                                                        .build();
+                                        billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
+                                            @Override
+                                            public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
+                                                Log.d(TAG, "onAcknowledgePurchaseResponse: " + billingResult.getDebugMessage());
+                                            }
+                                        });
 
-                                    callBackBilling.onPurchase();
-                                    return;
+                                        callBackBilling.onPurchase();
+                                        return;
+                                    }
                                 }
                             }
                         } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
@@ -95,15 +97,17 @@ public class BillingSubs {
                         billingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {
                             @Override
                             public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
-                                for (final SkuDetails skuDetails : list) {
-                                    Log.d(TAG, "onSkuDetailsResponse: " + list);
-                                    if (skuDetails.getSku().equals(sku)) {
-                                        BillingFlowParams billingFlowParams = BillingFlowParams
-                                                .newBuilder()
-                                                .setSkuDetails(skuDetails)
-                                                .build();
+                                if (list != null) {
+                                    for (final SkuDetails skuDetails : list) {
+                                        Log.d(TAG, "onSkuDetailsResponse: " + list);
+                                        if (skuDetails.getSku().equals(sku)) {
+                                            BillingFlowParams billingFlowParams = BillingFlowParams
+                                                    .newBuilder()
+                                                    .setSkuDetails(skuDetails)
+                                                    .build();
 
-                                        billingClient.launchBillingFlow(activity, billingFlowParams);
+                                            billingClient.launchBillingFlow(activity, billingFlowParams);
+                                        }
                                     }
                                 }
                             }
@@ -129,17 +133,18 @@ public class BillingSubs {
                     List<Purchase> listPurchase = billingClient.queryPurchases(BillingClient.SkuType.SUBS).getPurchasesList();
                     Log.d(TAG, "onBillingSetupFinished: " + listPurchase);
 
-                    for (Purchase purchase : listPurchase) {
-                        for (String s : listCheck) {
-                            if (purchase.getSku().equals(s)) {
-                                Log.d(TAG, "purchased: " + s);
-                                callBackBilling.onPurchase();
-                                return;
+                    if (listPurchase != null) {
+                        for (Purchase purchase : listPurchase) {
+                            for (String s : listCheck) {
+                                if (purchase.getSku().equals(s)) {
+                                    Log.d(TAG, "purchased: " + s);
+                                    callBackBilling.onPurchase();
+                                    return;
+                                }
                             }
                         }
                     }
                     callBackBilling.onNotPurchase();
-                    return;
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
                     callBackBilling.onNotLogin();
                 }
