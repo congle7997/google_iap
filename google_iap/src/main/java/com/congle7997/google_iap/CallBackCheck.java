@@ -1,9 +1,6 @@
 package com.congle7997.google_iap;
 
-import java.util.HashMap;
-
-public interface CallBackBilling {
+public interface CallBackCheck {
     void onPurchase();
     void onNotPurchase();
-    void onNotLogin();
 }

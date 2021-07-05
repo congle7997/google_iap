@@ -20,6 +20,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class BillingInApp {
@@ -28,11 +29,14 @@ public class BillingInApp {
     BillingClient billingClient;
     Activity activity;
     List<String> listSkuStore;
+    CallBackCheck callBackCheck;
+    CallBackPrice callBackPrice;
     CallBackBilling callBackBilling;
 
-    public BillingInApp(Activity activity, List<String> listSkuStore) {
+    public BillingInApp(Activity activity, List<String> listSkuStore, CallBackCheck callBackCheck) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
+        this.callBackCheck = callBackCheck;
 
 
         billingClient = BillingClient.newBuilder(activity)
@@ -42,6 +46,8 @@ public class BillingInApp {
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
                     }
                 }).build();
+
+        checkPurchase();
     }
 
     public BillingInApp(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
@@ -83,6 +89,22 @@ public class BillingInApp {
                         }
                     }
                 }).build();
+    }
+
+    public BillingInApp (Activity activity, List<String> listSkuStore, CallBackPrice callBackPrice) {
+        this.activity = activity;
+        this.listSkuStore = listSkuStore;
+        this.callBackPrice = callBackPrice;
+
+        billingClient = BillingClient.newBuilder(activity)
+                .enablePendingPurchases()
+                .setListener(new PurchasesUpdatedListener() {
+                    @Override
+                    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
+                    }
+                }).build();
+
+        getPrice();
     }
 
     public void purchase(String sku) {
@@ -128,7 +150,7 @@ public class BillingInApp {
         });
     }
 
-    public void checkPurchase(List<String> listCheck, CallBackBilling callBackBilling) {
+    public void checkPurchase() {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
@@ -140,22 +162,58 @@ public class BillingInApp {
 
                             if (list != null) {
                                 for (PurchaseHistoryRecord purchaseHistoryRecord : list) {
-                                    for (String s : listCheck) {
+                                    for (String s : listSkuStore) {
                                         if (purchaseHistoryRecord.getSku().equals(s)) {
                                             Log.d(TAG, "purchased: " + s);
 
-                                            callBackBilling.onPurchase();
+                                            callBackCheck.onPurchase();
                                             return;
                                         }
                                     }
                                 }
                             }
 
-                            callBackBilling.onNotPurchase();
+                            callBackCheck.onNotPurchase();
                         }
                     });
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                    callBackBilling.onNotLogin();
+                     //callBackCheck.onNotLogin();
+                }
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+
+            }
+        });
+    }
+
+    public void getPrice() {
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    if (billingClient.isReady()) {
+                        SkuDetailsParams skuDetailsParams = SkuDetailsParams
+                                .newBuilder()
+                                .setSkusList(listSkuStore)
+                                .setType(BillingClient.SkuType.SUBS)
+                                .build();
+
+                        billingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {
+                            @Override
+                            public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
+                                Log.d(TAG, "BillingInApp getPrice: " + list);
+                                HashMap<String, String> mapPrice = new HashMap<>();
+                                for (SkuDetails skuDetails : list) {
+                                    mapPrice.put(skuDetails.getSku(), skuDetails.getPrice());
+                                }
+                                callBackPrice.onPrice(mapPrice);
+                            }
+                        });
+                    }
+                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+                    callBackPrice.onNotLogin();
                 }
             }
 

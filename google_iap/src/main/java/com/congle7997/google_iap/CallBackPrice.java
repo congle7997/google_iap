@@ -2,8 +2,7 @@ package com.congle7997.google_iap;
 
 import java.util.HashMap;
 
-public interface CallBackBilling {
-    void onPurchase();
-    void onNotPurchase();
+public interface CallBackPrice {
     void onNotLogin();
+    void onPrice(HashMap<String, String> mapPrice);
 }

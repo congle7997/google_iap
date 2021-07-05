@@ -8,24 +8,27 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = "my_MainActivity";
 
-    Button btnInApp, btnCheckInApp, btnSubs, btnCheckSubs;
-    String skuInApp = "test_inapp_5";
-    String skuSubs = "test_ads_1";
+    Button btnBuyInApp, btnCheckInApp, btnBuySubs, btnCheckSubs, btnPriceInApp, btnPriceSubs;
+    String skuInApp = "android.test.purchased";
+    String skuSubs = "android.test.purchased";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnInApp = findViewById(R.id.btn_inapp);
+        btnBuyInApp = findViewById(R.id.btn_buy_inapp);
         btnCheckInApp = findViewById(R.id.btn_check_inapp);
-        btnSubs = findViewById(R.id.btn_subs);
+        btnBuySubs = findViewById(R.id.btn_buy_subs);
         btnCheckSubs = findViewById(R.id.btn_check_subs);
+        btnPriceInApp = findViewById(R.id.btn_price_inapp);
+        btnPriceSubs = findViewById(R.id.btn_price_subs);
 
         List<String> listSkuStoreInApp = new ArrayList<>();
         listSkuStoreInApp.add(skuInApp);
@@ -33,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
         List<String> listSkuStoreSubs = new ArrayList<>();
         listSkuStoreSubs.add(skuSubs);
         
-        btnInApp.setOnClickListener(new View.OnClickListener() {
+        btnBuyInApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BillingInApp billingInApp1 = new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackBilling() {
+                BillingInApp billingInApp = new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackBilling() {
                     @Override
                     public void onPurchase() {
                         Log.d(TAG, "onPurchase: ");
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                billingInApp1.purchase(skuInApp);
+                billingInApp.purchase(skuInApp);
             }
         });
 
@@ -62,31 +65,42 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 List<String> listCheckInApp = new ArrayList<>();
                 listCheckInApp.add(skuInApp);
-                BillingInApp billingInApp2 = new BillingInApp(MainActivity.this, listSkuStoreInApp);
-                billingInApp2.checkPurchase(listCheckInApp, new CallBackBilling() {
+                new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackCheck() {
                     @Override
                     public void onPurchase() {
-                        Log.d(TAG, "onPurchase: ");
+                        Log.d(TAG, "isPurchase: ");
                     }
 
                     @Override
                     public void onNotPurchase() {
-                        Log.d(TAG, "onNotPurchase: ");
+                        Log.d(TAG, "isNotPurchase: ");
+                    }
+                });
+            }
+        });
+
+        btnPriceInApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackPrice() {
+                    @Override
+                    public void onNotLogin() {
+                        Log.d(TAG, "onNotLogin: ");
                     }
 
                     @Override
-                    public void onNotLogin() {
-                        Log.d(TAG, "onNotLogged: ");
+                    public void onPrice(HashMap<String, String> mapPrice) {
+                        Log.d(TAG, "onPrice: " + mapPrice);
                     }
                 });
             }
         });
 
 
-        btnSubs.setOnClickListener(new View.OnClickListener() {
+        btnBuySubs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BillingSubs billingSubs1 = new BillingSubs(MainActivity.this, listSkuStoreSubs, new CallBackBilling() {
+                BillingSubs billingSubs = new BillingSubs(MainActivity.this, listSkuStoreSubs, new CallBackBilling() {
                     @Override
                     public void onPurchase() {
                         Log.d(TAG, "onPurchase: ");
@@ -101,9 +115,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onNotLogin() {
                         Log.d(TAG, "onNotLogged: ");
                     }
+
                 });
 
-                billingSubs1.purchase(skuSubs);
+                billingSubs.purchase(skuSubs);
             }
         });
 
@@ -112,8 +127,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 List<String> listCheckSubs = new ArrayList<>();
                 listCheckSubs.add(skuSubs);
-                BillingSubs billingSubs2 = new BillingSubs(MainActivity.this, listSkuStoreSubs);
-                billingSubs2.checkPurchase(listCheckSubs, new CallBackBilling() {
+                new BillingSubs(MainActivity.this, listCheckSubs, new CallBackCheck() {
                     @Override
                     public void onPurchase() {
                         Log.d(TAG, "onPurchase: ");
@@ -123,10 +137,22 @@ public class MainActivity extends AppCompatActivity {
                     public void onNotPurchase() {
                         Log.d(TAG, "onNotPurchase: ");
                     }
+                });
+            }
+        });
 
+        btnPriceSubs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new BillingSubs(MainActivity.this, listSkuStoreSubs, new CallBackPrice() {
                     @Override
                     public void onNotLogin() {
-                        Log.d(TAG, "onNotLogged: ");
+                        Log.d(TAG, "onNotLogin: ");
+                    }
+
+                    @Override
+                    public void onPrice(HashMap<String, String> mapPrice) {
+                        Log.d(TAG, "onPrice: " + mapPrice);
                     }
                 });
             }

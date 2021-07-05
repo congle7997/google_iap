@@ -18,6 +18,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class BillingSubs {
@@ -27,10 +28,13 @@ public class BillingSubs {
     Activity activity;
     List<String> listSkuStore;
     CallBackBilling callBackBilling;
+    CallBackPrice callBackPrice;
+    CallBackCheck callBackCheck;
 
-    public BillingSubs(Activity activity, List<String> listSkuStore) {
+    public BillingSubs(Activity activity, List<String> listSkuStore, CallBackCheck callBackCheck) {
         this.activity = activity;
         this.listSkuStore = listSkuStore;
+        this.callBackCheck = callBackCheck;
 
         billingClient = BillingClient.newBuilder(activity)
                 .enablePendingPurchases()
@@ -39,6 +43,8 @@ public class BillingSubs {
                     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
                     }
                 }).build();
+
+        checkPurchase();
     }
 
     public BillingSubs(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
@@ -78,6 +84,22 @@ public class BillingSubs {
                         }
                     }
                 }).build();
+    }
+
+    public BillingSubs (Activity activity, List<String> listSkuStore, CallBackPrice callBackPrice) {
+        this.activity = activity;
+        this.listSkuStore = listSkuStore;
+        this.callBackPrice = callBackPrice;
+
+        billingClient = BillingClient.newBuilder(activity)
+                .enablePendingPurchases()
+                .setListener(new PurchasesUpdatedListener() {
+                    @Override
+                    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
+                    }
+                }).build();
+
+        getPrice();
     }
 
     public void purchase(String sku) {
@@ -121,7 +143,43 @@ public class BillingSubs {
         });
     }
 
-    public void checkPurchase(List<String> listCheck, CallBackBilling callBackBilling) {
+    public void getPrice() {
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    if (billingClient.isReady()) {
+                        SkuDetailsParams skuDetailsParams = SkuDetailsParams
+                                .newBuilder()
+                                .setSkusList(listSkuStore)
+                                .setType(BillingClient.SkuType.SUBS)
+                                .build();
+
+                        billingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {
+                            @Override
+                            public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
+                                Log.d(TAG, "BillingSubs getPrice: " + list);
+                                HashMap<String, String> mapPrice = new HashMap<>();
+                                for (SkuDetails skuDetails : list) {
+                                    mapPrice.put(skuDetails.getSku(), skuDetails.getPrice());
+                                }
+                                callBackPrice.onPrice(mapPrice);
+                            }
+                        });
+                    }
+                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+                    callBackPrice.onNotLogin();
+                }
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+
+            }
+        });
+    }
+
+    public void checkPurchase() {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
@@ -130,18 +188,18 @@ public class BillingSubs {
                     Log.d(TAG, "onBillingSetupFinished: " + listPurchase);
 
                     for (Purchase purchase : listPurchase) {
-                        for (String s : listCheck) {
+                        for (String s : listSkuStore) {
                             if (purchase.getSku().equals(s)) {
                                 Log.d(TAG, "purchased: " + s);
-                                callBackBilling.onPurchase();
+                                callBackCheck.onPurchase();
                                 return;
                             }
                         }
                     }
-                    callBackBilling.onNotPurchase();
+                    callBackCheck.onNotPurchase();
                     return;
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                    callBackBilling.onNotLogin();
+                    //callBackCheck.onNotLogin();
                 }
             }
 

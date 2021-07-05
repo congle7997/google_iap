@@ -6,48 +6,64 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_inapp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="268dp"
-        android:text="INAPP"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></Button>
+        android:weightSum="3">
 
-    <Button
-        android:id="@+id/btn_check_inapp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="268dp"
-        android:text="check InApp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.376"
-        app:layout_constraintStart_toEndOf="@+id/btn_inapp"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/btn_buy_inapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="Buy InApp"></Button>
 
-    <Button
-        android:id="@+id/btn_subs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:text="Subs"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_inapp"
-        app:layout_constraintVertical_bias="0.253"></Button>
+        <Button
+            android:id="@+id/btn_check_inapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="check InApp" />
 
-    <Button
-        android:id="@+id/btn_check_subs"
-        android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btn_price_inapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="Price InApp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:weightSum="3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Check Subs"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.353"
-        app:layout_constraintStart_toEndOf="@+id/btn_subs"
-        app:layout_constraintTop_toBottomOf="@+id/btn_check_inapp"
-        app:layout_constraintVertical_bias="0.253" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <Button
+            android:layout_margin="10dp"
+            android:id="@+id/btn_buy_subs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buy Subs">
+        </Button>
+
+        <Button
+            android:layout_margin="10dp"
+            android:id="@+id/btn_check_subs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check Subs" />
+
+        <Button
+            android:layout_margin="10dp"
+            android:id="@+id/btn_price_subs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price Subs" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
