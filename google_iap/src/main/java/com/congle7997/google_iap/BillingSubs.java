@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BillingSubs {
-    String TAG = "my_BillingSubs";
+    String TAG = "BillingSubs";
 
     BillingClient billingClient;
     Activity activity;

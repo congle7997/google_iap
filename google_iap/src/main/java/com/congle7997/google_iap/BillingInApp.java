@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BillingInApp {
-    String TAG = "my_BillingInApp";
+    String TAG = "BillingInApp";
 
     BillingClient billingClient;
     Activity activity;
