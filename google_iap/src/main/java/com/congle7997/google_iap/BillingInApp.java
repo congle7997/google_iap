@@ -197,7 +197,7 @@ public class BillingInApp {
                         SkuDetailsParams skuDetailsParams = SkuDetailsParams
                                 .newBuilder()
                                 .setSkusList(listSkuStore)
-                                .setType(BillingClient.SkuType.SUBS)
+                                .setType(BillingClient.SkuType.INAPP)
                                 .build();
 
                         billingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {

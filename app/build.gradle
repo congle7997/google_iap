@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.minhhoang.vpnff.vpn"
+        applicationId "com.cwt.cheering_with_text"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
