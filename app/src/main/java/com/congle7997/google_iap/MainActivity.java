@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
         btnCheckInApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> listCheckInApp = new ArrayList<>();
-                listCheckInApp.add(skuInApp);
                 new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackCheck() {
                     @Override
                     public void onPurchase() {
@@ -125,9 +123,7 @@ public class MainActivity extends AppCompatActivity {
         btnCheckSubs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> listCheckSubs = new ArrayList<>();
-                listCheckSubs.add(skuSubs);
-                new BillingSubs(MainActivity.this, listCheckSubs, new CallBackCheck() {
+                new BillingSubs(MainActivity.this, listSkuStoreSubs, new CallBackCheck() {
                     @Override
                     public void onPurchase() {
                         Log.d(TAG, "onPurchase: ");
