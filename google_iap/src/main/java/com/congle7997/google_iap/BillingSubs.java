@@ -18,6 +18,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -143,42 +144,6 @@ public class BillingSubs {
         });
     }
 
-    public void getPrice() {
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    if (billingClient.isReady()) {
-                        SkuDetailsParams skuDetailsParams = SkuDetailsParams
-                                .newBuilder()
-                                .setSkusList(listSkuStore)
-                                .setType(BillingClient.SkuType.SUBS)
-                                .build();
-
-                        billingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {
-                            @Override
-                            public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
-                                Log.d(TAG, "BillingSubs getPrice: " + list);
-                                HashMap<String, String> mapPrice = new HashMap<>();
-                                for (SkuDetails skuDetails : list) {
-                                    mapPrice.put(skuDetails.getSku(), skuDetails.getPrice());
-                                }
-                                callBackPrice.onPrice(mapPrice);
-                            }
-                        });
-                    }
-                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                    callBackPrice.onNotLogin();
-                }
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-
-            }
-        });
-    }
-
     public void checkPurchase() {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
@@ -200,6 +165,42 @@ public class BillingSubs {
                     return;
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
                     //callBackCheck.onNotLogin();
+                }
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+
+            }
+        });
+    }
+
+    public void getPrice() {
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    if (billingClient.isReady()) {
+                        SkuDetailsParams skuDetailsParams = SkuDetailsParams
+                                .newBuilder()
+                                .setSkusList(listSkuStore)
+                                .setType(BillingClient.SkuType.SUBS)
+                                .build();
+
+                        billingClient.querySkuDetailsAsync(skuDetailsParams, new SkuDetailsResponseListener() {
+                            @Override
+                            public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
+                                Log.d(TAG, "BillingSubs getPrice: " + list);
+                                List<Billing> listBilling = new ArrayList<>();
+                                for (SkuDetails skuDetails : list) {
+                                    listBilling.add(new Billing(skuDetails.getSku(), skuDetails.getTitle(), skuDetails.getPrice()));
+                                }
+                                callBackPrice.onPrice(listBilling);
+                            }
+                        });
+                    }
+                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+                    callBackPrice.onNotLogin();
                 }
             }
 

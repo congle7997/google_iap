@@ -20,6 +20,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -204,11 +205,11 @@ public class BillingInApp {
                             @Override
                             public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
                                 Log.d(TAG, "BillingInApp getPrice: " + list);
-                                HashMap<String, String> mapPrice = new HashMap<>();
+                                List<Billing> listBilling = new ArrayList<>();
                                 for (SkuDetails skuDetails : list) {
-                                    mapPrice.put(skuDetails.getSku(), skuDetails.getPrice());
+                                    listBilling.add(new Billing(skuDetails.getSku(), skuDetails.getTitle(), skuDetails.getPrice()));
                                 }
-                                callBackPrice.onPrice(mapPrice);
+                                callBackPrice.onPrice(listBilling);
                             }
                         });
                     }

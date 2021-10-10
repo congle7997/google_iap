@@ -32,8 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
         List<String> listSkuStoreInApp = new ArrayList<>();
         listSkuStoreInApp.add(skuInApp);
+        listSkuStoreInApp.add(skuInApp);
+        listSkuStoreInApp.add(skuInApp);
 
         List<String> listSkuStoreSubs = new ArrayList<>();
+        listSkuStoreSubs.add(skuSubs);
         listSkuStoreSubs.add(skuSubs);
         
         btnBuyInApp.setOnClickListener(new View.OnClickListener() {
@@ -66,12 +69,12 @@ public class MainActivity extends AppCompatActivity {
                 new BillingInApp(MainActivity.this, listSkuStoreInApp, new CallBackCheck() {
                     @Override
                     public void onPurchase() {
-                        Log.d(TAG, "isPurchase: ");
+                        Log.d(TAG, "onPurchase: ");
                     }
 
                     @Override
                     public void onNotPurchase() {
-                        Log.d(TAG, "isNotPurchase: ");
+                        Log.d(TAG, "onNotPurchase: ");
                     }
                 });
             }
@@ -87,9 +90,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onPrice(HashMap<String, String> mapPrice) {
-                        Log.d(TAG, "onPrice: " + mapPrice);
+                    public void onPrice(List<Billing> listBilling) {
+                        for (Billing billing : listBilling) {
+                            Log.d(TAG, "onPrice: " + billing.getSku() + " - " + billing.getTitle() + " - " + billing.getPrice());
+                        }
                     }
+
                 });
             }
         });
@@ -147,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onPrice(HashMap<String, String> mapPrice) {
-                        Log.d(TAG, "onPrice: " + mapPrice);
+                    public void onPrice(List<Billing> listBilling) {
+                        for (Billing billing : listBilling) {
+                            Log.d(TAG, "onPrice: " + billing.getSku() + " - " + billing.getTitle() + " - " + billing.getPrice());
+                        }
                     }
                 });
             }
