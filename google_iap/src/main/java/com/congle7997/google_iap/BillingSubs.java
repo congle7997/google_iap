@@ -193,7 +193,12 @@ public class BillingSubs {
                                 Log.d(TAG, "BillingSubs getPrice: " + list);
                                 List<Billing> listBilling = new ArrayList<>();
                                 for (SkuDetails skuDetails : list) {
-                                    listBilling.add(new Billing(skuDetails.getSku(), skuDetails.getTitle(), skuDetails.getPrice()));
+                                    listBilling.add(new Billing(
+                                            skuDetails.getSku(),
+                                            skuDetails.getTitle(),
+                                            skuDetails.getDescription(),
+                                            skuDetails.getFreeTrialPeriod(),
+                                            skuDetails.getPrice()));
                                 }
                                 callBackPrice.onPrice(listBilling);
                             }

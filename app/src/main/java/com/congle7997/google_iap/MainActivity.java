@@ -32,13 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
         List<String> listSkuStoreInApp = new ArrayList<>();
         listSkuStoreInApp.add(skuInApp);
-        listSkuStoreInApp.add(skuInApp);
-        listSkuStoreInApp.add(skuInApp);
 
         List<String> listSkuStoreSubs = new ArrayList<>();
         listSkuStoreSubs.add(skuSubs);
-        listSkuStoreSubs.add(skuSubs);
-        
+
         btnBuyInApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onPrice(List<Billing> listBilling) {
                         for (Billing billing : listBilling) {
-                            Log.d(TAG, "onPrice: " + billing.getSku() + " - " + billing.getTitle() + " - " + billing.getPrice());
+                            Log.d(TAG, "onPrice: " + billing.toString());
                         }
                     }
 
@@ -155,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onPrice(List<Billing> listBilling) {
                         for (Billing billing : listBilling) {
-                            Log.d(TAG, "onPrice: " + billing.getSku() + " - " + billing.getTitle() + " - " + billing.getPrice());
+                            Log.d(TAG, "onPrice: " + billing.toString());
                         }
                     }
                 });
