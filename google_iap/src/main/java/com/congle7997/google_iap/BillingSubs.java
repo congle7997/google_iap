@@ -195,7 +195,7 @@ public class BillingSubs {
                                 for (SkuDetails skuDetails : list) {
                                     listBilling.add(new Billing(
                                             skuDetails.getSku(),
-                                            skuDetails.getTitle(),
+                                            skuDetails.getTitle().substring(0, skuDetails.getTitle().indexOf("(") - 1),
                                             skuDetails.getDescription(),
                                             skuDetails.getFreeTrialPeriod(),
                                             skuDetails.getPrice()));

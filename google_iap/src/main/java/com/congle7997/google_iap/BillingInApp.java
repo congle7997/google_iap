@@ -207,9 +207,10 @@ public class BillingInApp {
                                 Log.d(TAG, "BillingInApp getPrice: " + list);
                                 List<Billing> listBilling = new ArrayList<>();
                                 for (SkuDetails skuDetails : list) {
+                                    Log.d(TAG, "onSkuDetailsResponse: " + skuDetails.getTitle().substring(0, skuDetails.getTitle().indexOf("(") - 1));
                                     listBilling.add(new Billing(
                                             skuDetails.getSku(),
-                                            skuDetails.getTitle(),
+                                            skuDetails.getTitle().substring(0, skuDetails.getTitle().indexOf("(") - 1),
                                             skuDetails.getDescription(),
                                             skuDetails.getFreeTrialPeriod(),
                                             skuDetails.getPrice()));
