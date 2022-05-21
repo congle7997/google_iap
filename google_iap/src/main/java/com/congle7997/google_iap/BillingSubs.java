@@ -193,9 +193,14 @@ public class BillingSubs {
                                 Log.d(TAG, "BillingSubs getPrice: " + list);
                                 List<Billing> listBilling = new ArrayList<>();
                                 for (SkuDetails skuDetails : list) {
+                                    String title = skuDetails.getTitle();
+                                    if (skuDetails.getTitle().contains("(")) {
+                                        title = skuDetails.getTitle().substring(0, skuDetails.getTitle().indexOf("(") - 1);
+                                    }
+
                                     listBilling.add(new Billing(
                                             skuDetails.getSku(),
-                                            skuDetails.getTitle().substring(0, skuDetails.getTitle().indexOf("(") - 1),
+                                            title,
                                             skuDetails.getDescription(),
                                             skuDetails.getFreeTrialPeriod(),
                                             skuDetails.getPrice()));
