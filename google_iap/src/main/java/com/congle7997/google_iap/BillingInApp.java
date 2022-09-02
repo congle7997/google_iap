@@ -152,7 +152,7 @@ public class BillingInApp {
     }
 
     public void checkPurchase() {
-        billingClient.startConnection(new BillingClientStateListener() {
+        /*billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                  if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
@@ -186,7 +186,7 @@ public class BillingInApp {
             public void onBillingServiceDisconnected() {
 
             }
-        });
+        });*/
     }
 
     public void getPrice() {
