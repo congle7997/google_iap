@@ -30,23 +30,6 @@ public class BillingSubs {
     List<String> listSkuStore;
     CallBackBilling callBackBilling;
     CallBackPrice callBackPrice;
-    CallBackCheck callBackCheck;
-
-    public BillingSubs(Activity activity, List<String> listSkuStore, CallBackCheck callBackCheck) {
-        this.activity = activity;
-        this.listSkuStore = listSkuStore;
-        this.callBackCheck = callBackCheck;
-
-        billingClient = BillingClient.newBuilder(activity)
-                .enablePendingPurchases()
-                .setListener(new PurchasesUpdatedListener() {
-                    @Override
-                    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-                    }
-                }).build();
-
-        checkPurchase();
-    }
 
     public BillingSubs(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
         this.activity = activity;
@@ -142,37 +125,6 @@ public class BillingSubs {
 
             }
         });
-    }
-
-    public void checkPurchase() {
-        /*billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    List<Purchase> listPurchase = billingClient.queryPurchases(BillingClient.SkuType.SUBS).getPurchasesList();
-                    Log.d(TAG, "onBillingSetupFinished: " + listPurchase);
-
-                    for (Purchase purchase : listPurchase) {
-                        for (String s : listSkuStore) {
-                            if (purchase.getSku().equals(s)) {
-                                Log.d(TAG, "purchased: " + s);
-                                callBackCheck.onPurchase();
-                                return;
-                            }
-                        }
-                    }
-                    callBackCheck.onNotPurchase();
-                    return;
-                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                    //callBackCheck.onNotLogin();
-                }
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-
-            }
-        });*/
     }
 
     public void getPrice() {

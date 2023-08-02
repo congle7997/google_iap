@@ -13,15 +13,12 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class BillingInApp {
@@ -30,26 +27,8 @@ public class BillingInApp {
     BillingClient billingClient;
     Activity activity;
     List<String> listSkuStore;
-    CallBackCheck callBackCheck;
     CallBackPrice callBackPrice;
     CallBackBilling callBackBilling;
-
-    public BillingInApp(Activity activity, List<String> listSkuStore, CallBackCheck callBackCheck) {
-        this.activity = activity;
-        this.listSkuStore = listSkuStore;
-        this.callBackCheck = callBackCheck;
-
-
-        billingClient = BillingClient.newBuilder(activity)
-                .enablePendingPurchases()
-                .setListener(new PurchasesUpdatedListener() {
-                    @Override
-                    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-                    }
-                }).build();
-
-        checkPurchase();
-    }
 
     public BillingInApp(Activity activity, List<String> listSkuStore, CallBackBilling callBackBilling) {
         this.activity = activity;
@@ -150,45 +129,6 @@ public class BillingInApp {
             }
         });
     }
-
-    public void checkPurchase() {
-        /*billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
-                        @Override
-                        public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
-                            Log.d(TAG, "onPurchaseHistoryResponse: " + list);
-
-                            if (list != null) {
-                                for (PurchaseHistoryRecord purchaseHistoryRecord : list) {
-                                    for (String s : listSkuStore) {
-                                        if (purchaseHistoryRecord.getSku().equals(s)) {
-                                            Log.d(TAG, "purchased: " + s);
-
-                                            callBackCheck.onPurchase();
-                                            return;
-                                        }
-                                    }
-                                }
-                            }
-
-                            callBackCheck.onNotPurchase();
-                        }
-                    });
-                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
-                     //callBackCheck.onNotLogin();
-                }
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-
-            }
-        });*/
-    }
-
     public void getPrice() {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
